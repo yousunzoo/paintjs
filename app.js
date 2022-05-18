@@ -10,7 +10,7 @@ const canvas = document.getElementById("jsCanvas");
 const ctx = canvas.getContext("2d");
 const colors = document.getElementsByClassName('js_color');
 const range = document.getElementById("jsRange")
-
+const mode = document.getElementById("jsMode");
 
 // pixel modifier
 canvas.width = 700;
@@ -21,6 +21,9 @@ ctx.strokeStyle = "#2c2c2c";
 ctx.lineWidth = 2.5;
 
 let painting = false;
+let filling = false;
+
+
 
 // 마우스를 뗐을 때, 캔버스를 벗어났을 때 브러쉬 동작 멈춤처리
 function stopPainting(){
@@ -59,6 +62,15 @@ function handleRangeChange(event){
   const size = event.target.value;
   ctx.lineWidth = size;}
 
+function handleModeClick(event){
+  if(filling === true){
+    filling = false;
+    mode.innerText = "Fill"
+  } else {
+    filling = true;
+    mode.innerText = "Paint"
+  }
+}
 
 // 이벤트 설정
 if(canvas){
@@ -74,4 +86,8 @@ Array.from(colors).forEach(color => color.addEventListener("click", handleColorC
 
 if(range){
   range.addEventListener("input", handleRangeChange);
+}
+
+if(mode){
+  mode.addEventListener("click", handleModeClick)
 }
