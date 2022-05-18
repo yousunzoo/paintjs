@@ -4,9 +4,13 @@
  * 2) js 작동을 위한 사이즈 context 속성을 가짐 (manipulationg)
  * context : 요소 안에서 픽셀에 접근할 수 있는 방법. 픽셀들을 컨트롤
 */
+
+// 변수
 const canvas = document.getElementById("jsCanvas");
 const ctx = canvas.getContext("2d");
 const colors = document.getElementsByClassName('js_color');
+const range = document.getElementById("jsRange")
+
 
 // pixel modifier
 canvas.width = 700;
@@ -51,11 +55,23 @@ function handleColorClick(event){
   ctx.strokeStyle = color;
 }
 
+function handleRangeChange(event){
+  const size = event.target.value;
+  ctx.lineWidth = size;}
+
+
 // 이벤트 설정
 if(canvas){
   canvas.addEventListener("mousemove", onMouseMove);
   canvas.addEventListener("mousedown", startPainting);
   canvas.addEventListener("mouseup", stopPainting);
   canvas.addEventListener("mouseleave", stopPainting);
-} 
-Array.from(colors).forEach(color => color.addEventListener("click", handleColorClick))
+}
+
+// js_color div 나열을 배열처리, 각각의 배열요소에 event 부여
+// color는 임의의 이름. 
+Array.from(colors).forEach(color => color.addEventListener("click", handleColorClick));
+
+if(range){
+  range.addEventListener("input", handleRangeChange);
+}
