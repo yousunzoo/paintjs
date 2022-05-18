@@ -11,13 +11,22 @@ const ctx = canvas.getContext("2d");
 const colors = document.getElementsByClassName('js_color');
 const range = document.getElementById("jsRange")
 const mode = document.getElementById("jsMode");
+const saveBtn = document.getElementById("jsSave");
+
+const INITIAL_COLOR = "#2c2c2c";
+const CANVAS_SIZE = 700;  
 
 // pixel modifier
-canvas.width = 700;
-canvas.height = 700;
+canvas.width = CANVAS_SIZE;
+canvas.height = CANVAS_SIZE;
+
+// 초기 배경색 설정
+ctx.fillStyle = "white";
+ctx.fillRect(0,0, CANVAS_SIZE, CANVAS_SIZE)
 
 // 초기 브러쉬 색상과 굵기 설정
-ctx.strokeStyle = "#2c2c2c";
+ctx.strokeStyle = INITIAL_COLOR;
+ctx.fillStyle = INITIAL_COLOR;
 ctx.lineWidth = 2.5;
 
 let painting = false;
@@ -56,6 +65,7 @@ function onMouseMove(event){
 function handleColorClick(event){
   const color = event.target.style.backgroundColor;
   ctx.strokeStyle = color;
+  ctx.fillStyle = color;
 }
 
 function handleRangeChange(event){
@@ -68,8 +78,26 @@ function handleModeClick(event){
     mode.innerText = "Fill"
   } else {
     filling = true;
-    mode.innerText = "Paint"
+    mode.innerText = "Paint";
   }
+}
+
+function handleCanvasClick(event){
+  if(filling){
+  ctx.fillRect(0,0, CANVAS_SIZE, CANVAS_SIZE)
+  }
+}
+
+function handleCM(event){
+event.preventDefault();
+}
+
+function handleSaveClick(event){
+  const image = canvas.toDataURL("image/png"); // 어떤 형태로 불러올 것인지
+  const link = document.createElement("a");
+  link.href = image;
+  link.download = "PaintJS[EXPORT]"; //파일명
+  link.click();
 }
 
 // 이벤트 설정
@@ -78,6 +106,8 @@ if(canvas){
   canvas.addEventListener("mousedown", startPainting);
   canvas.addEventListener("mouseup", stopPainting);
   canvas.addEventListener("mouseleave", stopPainting);
+  canvas.addEventListener("click", handleCanvasClick);
+  canvas.addEventListener("contextmenu", handleCM)
 }
 
 // js_color div 나열을 배열처리, 각각의 배열요소에 event 부여
@@ -90,4 +120,8 @@ if(range){
 
 if(mode){
   mode.addEventListener("click", handleModeClick)
+}
+
+if(saveBtn){
+  saveBtn.addEventListener("click", handleSaveClick)
 }
